@@ -1,0 +1,94 @@
+<!--http://jasonwatmore.com/post/2016/06/22/nodejs-setup-simple-http-server-local-web-server-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Notflix | Movies</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="style/star-rating-svg.css"> <!-- Star rating -->
+    <link rel="stylesheet" href="style/movies.css"> <!-- Additional styling -->
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js"
+            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+            crossorigin="anonymous"></script> <!--JQuery-->
+    <script src="js/jquery.star-rating-svg.js"></script> <!-- Star rating -->
+</head>
+
+<body>
+<!--Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="index.html">Notflix</a>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="movies.html">Movies</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="users.html">Users</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username">
+            <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+        </form>
+    </div>
+</nav>
+
+<!-- Jumbotron -->
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-3">Movies</h1>
+        <p class="lead">This page contains all movies stored in the Notflix database</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="alert alert-warning">
+        <strong>Read this first!</strong> Notflix is using a free version of MyAPIFilms currently. This means that only one
+        cover per request can be loaded. Another limit of using a free version is the speed the service handles our requests. Every single
+        request can take up to 25 seconds, so please be patient when loading this page.
+    </div>
+
+    <div id="movies">
+        <!--Dynamically filled-->
+    </div>
+</div>
+
+<!--<div id="movies"></div>-->
+<script src="js/get_all_movies.js"></script> <!-- Load movies -->
+
+<hr>
+
+<footer style="clear: both">
+    <p>&copy; Wybren en Niels Productions 2017</p>
+</footer>
+<!-- /container -->
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+        integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+        crossorigin="anonymous"></script>
+</body>
+</html>

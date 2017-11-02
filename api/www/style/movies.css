@@ -1,0 +1,26 @@
+.card {
+    margin: 20px;
+}
+
+.card .details {
+    padding: 10px;
+}
+
+.card img {
+    max-height: 200px;
+    margin-right: 10px;
+}
+
+@media (max-width: 660px) {
+    .card .details {
+        display: inline-block;
+        min-width: 10px;
+    }
+
+    .card img {
+        width: 100%;
+        max-height: none;
+    }
+}
+
+/* Rating stars */
