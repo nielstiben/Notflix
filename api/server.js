@@ -1,5 +1,5 @@
 // /api/server.js
-// const dummy = require('./createDummies'); // Uncomment for creating dummies
+//const dummy = require('./createDummies'); // Uncomment for creating dummies
 
 const express = require('express'),
     app = express(),
