@@ -131,6 +131,7 @@ exports.set_rating = function (req, res) {
 
         // Rate input is valid
         const rate = parseFloat(req.body.rate);
+
         if (rate >= 0.5 && rate <= 5) {
 
             // Obtain info about the user
@@ -140,9 +141,8 @@ exports.set_rating = function (req, res) {
                 if (user) {
 
                     // Find movie
-                    Movie.findOne(
+                    Movie.findOne({"IMDB" : req.body.IMDB},
                         function (err, movie) {
-
                             // error handling
                             if (err) {
                                 console.error(err);
@@ -235,14 +235,8 @@ exports.delete_rating = function (req, res) {
                 if (user) {
 
                     // Find movie
-                    Movie.findOne(
+                    Movie.findOne({"IMDB" : req.body.IMDB},
                         function (err, movie) {
-
-                            // error handling
-                            if (err) {
-                                console.error(err);
-                            }
-
                             // movie found
                             if (movie) {
                                 let ratingFound = false;

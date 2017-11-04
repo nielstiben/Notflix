@@ -28,7 +28,7 @@ module.exports = function (app) {
         .post(userController.login);
     app.route(urlPrefix + '/auth/register')
         .post(userController.register);
-    app.route(urlPrefix + '/auth/validate-token')
+    app.route(urlPrefix + '/auth/validate')
         .get(userController.validate_token);
 
     // Dummies

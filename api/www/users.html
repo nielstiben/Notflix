@@ -1,10 +1,91 @@
+<!--http://jasonwatmore.com/post/2016/06/22/nodejs-setup-simple-http-server-local-web-server-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <title>Notflix | Movies</title>
 
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="style/star-rating-svg.css"> <!-- Star rating -->
+    <link rel="stylesheet" href="style/movies.css"> <!-- Additional styling -->
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js"
+            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+            crossorigin="anonymous"></script> <!--JQuery-->
+    <script src="js/jquery.star-rating-svg.js"></script> <!-- Star rating -->
+    <script src="./js/login.js"></script> <!-- login script -->
+    <script src="./js/users.js"></script>
+</head>
+
+<body>
+<!--Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="./index.html">Notflix</a>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="movies.html">Movies</a>
+            </li>
+            <li id="nav_users" class="nav-item">
+                <a class="nav-link" href="users.html">Users</a>
+            </li>
+        </ul>
+        <div id="msgBox"></div>
+        <form id="loginForm" class="form-inline my-2 my-lg-0" autocomplete="off">
+            <input id="username" class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username">
+            <input id="password" class="form-control mr-sm-2" type="password" placeholder="Password"
+                   aria-label="Password">
+            <button id="loginButton" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+        </form>
+        <form id="logoutForm" class="form-inline my-2 my-lg-0" autocomplete="off">
+
+            <button id="logoutButton" class="btn btn-success my-2 my-sm-0" type="submit">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<!-- Jumbotron -->
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-3">Users</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div id="message-box" class="col-md-4"></div>
+    <div id="users">
+        <!--Dynamically filled-->
+    </div>
+
+    <hr>
+    <footer style="clear: both">
+        <p>&copy; Wybren en Niels Productions 2017</p>
+    </footer>
+</div>
+<!-- /container -->
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+        integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+        crossorigin="anonymous"></script>
 </body>
 </html>

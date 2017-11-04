@@ -11,7 +11,8 @@
     <!-- Style -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
 
-          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> <!-- Bootstrap CSS -->
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.2.1.js"
@@ -27,7 +28,7 @@
             aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#">Notflix</a>
+    <a class="navbar-brand" href="./index.html">Notflix</a>
 
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -37,15 +38,20 @@
             <li class="nav-item">
                 <a class="nav-link" href="movies.html">Movies</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="users.html">Users</a>
+            <li id="nav_users" class="nav-item">
+                <a class="nav-link" href="users.html">Users</a>
             </li>
         </ul>
         <div id="msgBox"></div>
-        <form class="form-inline my-2 my-lg-0" autocomplete="off">
+        <form id="loginForm" class="form-inline my-2 my-lg-0" autocomplete="off">
             <input id="username" class="form-control mr-sm-2" type="text" placeholder="Username" aria-label="Username">
-            <input id="password" class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
-            <button id="submit" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+            <input id="password" class="form-control mr-sm-2" type="password" placeholder="Password"
+                   aria-label="Password">
+            <button id="loginButton" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+        </form>
+        <form id="logoutForm" class="form-inline my-2 my-lg-0" autocomplete="off">
+
+            <button id="logoutButton" class="btn btn-success my-2 my-sm-0" type="submit">Logout</button>
         </form>
     </div>
 </nav>
@@ -57,7 +63,7 @@
         <p>Notflix is an online rating platform for movies. This platform is meant for you and your friends to share the
             rating of a certain movie with each other. If you and your friends are couch potatoes and addicted to
             movies; do not hestitate and register now! </p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Register now &raquo;</a></p>
+        <p><a class="btn btn-primary btn-lg" href="./register.html" role="button">Register now &raquo;</a></p>
     </div>
 </div>
 
@@ -69,27 +75,24 @@
             <p>All the movies that are added to this platform can be rated. You can simply modify or delete your own
                 rating, and see the average of all ratings together. All the details are substracted from the official
                 IMDB website.</p>
-            <p><a class="btn btn-secondary" href="movies.html" role="button">See all movies &raquo;</a></p>
         </div>
         <div class="col-md-4">
             <h2>Users</h2>
             <p>In order to place ratings, you must be logged in. Everyone can register for this platform and so place
                 ratings. </p>
-            <p><a class="btn btn-secondary" href="#" role="button">See all users &raquo;</a></p>
         </div>
         <div class="col-md-4">
             <h2>Api</h2>
             <p>Developers can use the Notflix API for free.</p>
-            <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
         </div>
     </div>
+<hr>
 
-    <hr>
-
-    <footer>
-        <p>&copy; Wybren en Niels Productions 2017</p>
-    </footer>
+<footer>
+    <p>&copy; Wybren en Niels Productions 2017</p>
+</footer>
 </div> <!-- /container -->
+
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

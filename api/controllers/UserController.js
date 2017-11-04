@@ -10,30 +10,53 @@ console.log("    -user controller loaded;");
 // Authentication
 // Login
 exports.login = function (req, res) {
-    User.findOne({
-        username: req.body.username
-    }, function (err, user) {
-        if (err) throw err;
-        if (!user) {
-            res.status(404).json({message: 'Authentication failed. User not found.'});
-        } else if (user) {
-            if (!user.comparePassword(req.body.password)) {
-                res.status(401).json({message: 'Authentication failed. Wrong password.'});
-            } else {
+    if (req.body.username && req.body.username.length > 0 && req.body.username.length <= 64) {
+        if (req.body.password && req.body.password.length > 0 && req.body.password.length <= 64) {
 
-
-                res.status(200);
-                return res.json({
-                    token: jwt.sign({
-                            username: user.username,
-                            firstname: user.firstname,
-                            _id: user._id
-                        }, 'RESTFULAPIs',
-                        {expiresIn: '2h'})
-                });
-            }
+            User.findOne({
+                username: req.body.username
+            }, function (err, user) {
+                if (err) throw err;
+                if (user) {
+                    if(user.comparePassword(req.body.password)) {
+                        res.status(200);
+                        return res.json({
+                            token: jwt.sign({
+                                    username: user.username,
+                                    firstname: user.firstname,
+                                    _id: user._id
+                                }, 'RESTFULAPIs',
+                                {expiresIn: '2h'})
+                        });
+                    }
+                    // Password does not match
+                    else {
+                        let errorObj = {};
+                        errorObj['error'] = 'Invalid password';
+                        res.status(401).send(errorObj)
+                    }
+                }
+                // Username does not exist
+                else {
+                    let errorObj = {};
+                    errorObj['error'] = 'User not found';
+                    res.status(404).send(errorObj)
+                }
+            });
         }
-    });
+        // No password entered
+        else {
+            let errorObj = {};
+            errorObj['error'] = 'No password entered';
+            res.status(400).send(errorObj)
+        }
+    }
+    // No username entered
+    else {
+        let errorObj = {};
+        errorObj['error'] = 'No username entered';
+        res.status(400).send(errorObj)
+    }
 };
 
 // Register a new user
@@ -108,9 +131,28 @@ exports.register = function (req, res) {
 
 exports.validate_token = function (req, res) {
     if (req.user) {
-        return res.status(200).json({message: "Token is authorized"})
-    } else {
-        return res.status(401).json({message: "Invalid token"})
+        // Find assosiated user
+        User.findOne({"username": req.user.username}, function (err, user) {
+            // User found
+            if (user) {
+                const userObj = {
+                    username: user.username,
+                    firstname: user.firstname,
+                    middlename: user.middlename,
+                    lastname: user.lastname
+                };
+                res.status(200).send(userObj);
+            }
+            // User not found
+            else {
+                let errorObj = {};
+                errorObj['error'] = 'User not found';
+                res.status(404).send(errorObj)
+            }
+        });
+    }
+    else {
+        return res.status(401).json({message: "Unauthorized"})
     }
 };
 
