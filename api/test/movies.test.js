@@ -11,7 +11,6 @@ describe('Movie list API Integration Tests', function () {
     var token = null;
 
 
-
     before(function (done) {
         request(app).post('/api/auth/login')
             .send({"username": "ntiben", "password": "secret"})
@@ -39,7 +38,7 @@ describe('Movie list API Integration Tests', function () {
         it('should get a task', function (done) {
             request(app)
                 .get('/api/movie')
-                .query({IMDB: '0111161'})
+                .query({'IMDB': '0111161'})
                 .end(function (err, res) {
                     expect(res.statusCode).to.equal(200);
                     expect(res.body.title).to.equal('The Shawshank Redemption');
@@ -53,7 +52,6 @@ describe('Movie list API Integration Tests', function () {
                 .end(function (err, res) {
                     expect(res.statusCode).to.equal(404);
                     expect(res.body).eql({'error': 'Movie not found'});
-                    //expect(res.body).equal({'error' : 'Movie not found'})
                     done();
                 });
         })
@@ -67,8 +65,8 @@ describe('Movie list API Integration Tests', function () {
                 .send({"rate": "4"})
                 // .query({IMDB: '0111161'})
                 .end(function (err, res) {
-                    expect(res.statusCode).to.equal(200 || 202);
-                    expect(res.body.success).to.equal('rating modified' || 'rating created');
+                    expect(res.statusCode).to.equal(202);
+                    expect(res.body.success).to.equal('rating created');
                     done();
                 });
         });
@@ -109,7 +107,6 @@ describe('Movie list API Integration Tests', function () {
                 });
         });
 
-
     });
 
 
@@ -145,41 +142,147 @@ describe('Movie list API Integration Tests', function () {
 
 
     describe('#GET /api/users', function () {
-        it('should get all users', function (done) {
-            cono
-            request(app).get('/api/users').send({"username": "ntiben", "password": "secret"})
+        it('return a list of users', function (done) {
+            request(app).get('/api/users')
+                .set({"Authorization": "JMT " + token})
                 .end(function (err, res) {
                     expect(res.statusCode).to.equal(200);
-                    var token = res.token;
-                    console.log(token)
-
-                    request(app).get('/api/users').set({"authorization": "JMT " + token})
-                        .end(function (err, res) {
-                            expect(res.statusCode).to.equal(200);
-                            expect(res.body).to.be.an('array');
-                            expect("Content-type", /json/)
-                            done();
-                        });
+                    expect("Content-type", /json/)
+                    done();
                 });
         });
     });
 
-    describe('#POST Create user ', function () {
-        it('should create a user', function (done) {
-
-            request(app).post('/api/auth/login').send({"Authorization": "JMT " + token})
+    describe('#GET /api/user', function () {
+        it('should return a specific user', function (done) {
+            request(app).get('/api/user')
+                .set({"Authorization": "JMT " + token})
+                .query({"username": "ntiben"})
                 .end(function (err, res) {
                     expect(res.statusCode).to.equal(200);
+                    expect("Content-type", /json/)
+                    done();
+                });
+        });
+        it('should return a error not authorized', function (done) {
+            request(app).get('/api/user')
+                .set({"username": "ntiben"})
+                .end(function (err, res) {
+                    expect(res.statusCode).to.equal(401);
+                    expect(res.body).eql({'error': 'not authorized'});
+                    done();
+                });
+        });
+        it('should return an error user not found', function (done) {
+            request(app).get('/api/user')
+                .set({"Authorization": "JMT " + token})
+                .end(function (err, res) {
+                    expect(res.statusCode).to.equal(404);
+                    expect(res.body).eql({'error': 'User not found'});
+                    done();
+                });
+        });
+    });
+
+
+    describe('#POST Create user ', function () {
+        it('create a user', function (done) {
+            request(app).post('/api/auth/register').send({
+                "firstname": "Jan",
+                "lastname": "Klaasen",
+                "username": "jklaasen",
+                "password": "datmagniemandweten"
+            }).end(function (err, res) {
+                expect(res.statusCode).to.equal(201);
+                done();
+            });
+        });
+        it('should not create a user, return user already exists', function (done) {
+            after
+            request(app).post('/api/auth/register').send({
+                "firstname": "Jan",
+                "lastname": "Klaasen",
+                "username": "jklaasen",
+                "password": "datmagniemandweten"
+            }).end(function (err, res) {
+                expect(res.statusCode).to.equal(409);
+                expect(res.body).eql({'error': 'Username already exists.'});
+                done();
+            });
+
+        });
+        it('should not create a user, return an error ', function (done) {
+            after(function () {
+                request(app).post('/api/auth/register').send({
+                    "firstname": "Jan",
+                    "lastname": "",
+                    "username": "jklaasen",
+                    "password": "datmagniemandweten"
+                }).end(function (err, res) {
+                    expect(res.statusCode).to.equal(400);
+                    expect(res.body).eql({'error': 'Last name is not valid. It must contain 1 characters with a maximum of 64 characters.'});
+                    done();
+                });
+            });
+        });
+        it('should not create a user, return an error', function (done) {
+            request(app).post('/api/auth/register').send({
+                "firstname": "",
+                "lastname": "Klaasen",
+                "username": "jklaasen",
+                "password": "datmagniemandweten"
+            }).end(function (err, res) {
+                expect(res.statusCode).to.equal(400);
+                expect(res.body).eql({'error': 'First name is not valid. It must contain 1 characters with a maximum of 64 characters.'});
+                done();
+            });
+        });
+        it('should not create a user, return an error ', function (done) {
+            request(app).post('/api/auth/register').send({
+                "firstname": "Jan",
+                "lastname": "Klaasen",
+                "username": "jklaasen",
+                "password": "hasdfoi"
+            }).end(function (err, res) {
+                expect(res.statusCode).to.equal(400);
+                expect(res.body).eql({'error': 'Password not sufficient. It must contain 4 characters with a maximum of 64 characters.'});
+                done();
+            });
+        });
+        it('should not create a user, return an error', function (done) {
+            request(app).post('/api/auth/register').send({
+                "firstname": "Jan",
+                "lastname": "Klaasen",
+                "username": "",
+                "password": "hoasfi"
+            }).end(function (err, res) {
+                expect(res.statusCode).to.equal(400);
+                expect(res.body).eql({'error': 'Username not valid. It must contain 1 character with a maximum of 64 characters.'});
+                done();
+            });
+        });
+    });
+
+    describe('#GET /api/auth/validate', function () {
+        it('should return a user info', function (done) {
+            request(app).get('/api/users')
+                .set({"Authorization": "JMT " + token})
+                .end(function (err, res) {
+                    expect(res.statusCode).to.equal(200);
+                    expect("Content-type", /json/)
+                    done();
+                });
+        });
+        it('should return an error unauthorized', function (done) {
+            request(app).get('/api/users')
+                .set({"Authorization": "Wrong "})
+                .end(function (err, res) {
+                    expect(res.statusCode).to.equal(401);
+                    expect(res.body).eql({'error':'not authorized'});
                     done();
                 });
         });
 
-        it('should give an error', function (done) {
-            request(app).post('/api/register').send().end(function (err, res) {
-                expect(res.statusCode).to.equal(400);
-                done();
-            });
-        });
     });
 });
 
