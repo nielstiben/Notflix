@@ -35,7 +35,7 @@ describe('Movie list API Integration Tests', function () {
     });
 
     describe('#GET Get a movie by id', function () {
-        it('should get a task', function (done) {
+        it('should get a movie', function (done) {
             request(app)
                 .get('/api/movie')
                 .query({'IMDB': '0111161'})
@@ -61,21 +61,28 @@ describe('Movie list API Integration Tests', function () {
         it('should create a rating on a movie', function (done) {
             request(app)
                 .put('/api/movie/rate')
-                .set({"imdb": "0111161", "Authorization": "JMT " + token})
-                .send({"rate": "4"})
-                // .query({IMDB: '0111161'})
+                .set({"Authorization": "JMT " + token})
+                .send({"IMDB": "0111161", "rate": "4"})
                 .end(function (err, res) {
                     expect(res.statusCode).to.equal(202);
-                    expect(res.body.success).to.equal('rating created');
+                    it('should modify a rating on a movie ', function (done) {
+                        request(app)
+                            .put('/api/movie/rate')
+                            .set({"Authorization": "JMT " + token})
+                            .send({"IMDB": "0111161", "rate": "4"})
+                            .end(function (err, res) {
+                                expect(res.statusCode).to.equal(200);
+                                done();
+                            });
+                    })
                     done();
                 });
         });
         it('should not create a rating on a movie, return not authorized', function (done) {
             request(app)
                 .put('/api/movie/rate')
-                .set({"imdb": "0111161", "Authorization": "WRONG "})
-                .send({"rate": "4"})
-                // .query({IMDB: '0111161'})
+                .set({"Authorization": "WRONG "})
+                .send({"IMDB": "0111161", "rate": "4"})
                 .end(function (err, res) {
                     expect(res.statusCode).to.equal(401);
                     expect(res.body.error).to.equal('not authorized');
@@ -85,8 +92,8 @@ describe('Movie list API Integration Tests', function () {
         it('should not create a rating on a movie, return invalid rate', function (done) {
             request(app)
                 .put('/api/movie/rate')
-                .set({"imdb": "TEST", "Authorization": "JMT " + token})
-                .send({"rate": "4"})
+                .set({"Authorization": "JMT " + token})
+                .send({"IMDB": "TEST", "rate": "4"})
                 // .query({IMDB: '0111161'})
                 .end(function (err, res) {
                     expect(res.statusCode).to.equal(404);
@@ -98,7 +105,8 @@ describe('Movie list API Integration Tests', function () {
         it('should delete a rating of a movie', function (done) {
             request(app)
                 .delete('/api/movie/rate')
-                .set({"imdb": "0111161", "username": "ntiben", "Authorization": "JMT " + token})
+                .set({"username": "ntiben", "Authorization": "JMT " + token})
+                .send({"IMDB": "0111161"})
                 // .query({IMDB: '0111161'})
                 .end(function (err, res) {
                     expect(res.statusCode).to.equal(200);
@@ -124,16 +132,34 @@ describe('Movie list API Integration Tests', function () {
                 .end(function (err, res) {
                     expect(res.statusCode).to.equal(401);
                     expect("Content-type", /json/)
-                    expect(res.body).eql({'message': 'Authentication failed. Wrong password.'});
+                    expect(res.body).eql({'error': 'Invalid password'});
+                    done();
+                });
+        });
+        it('should not login and return empty password', function (done) {
+            request(app).post('/api/auth/login').send({"username": "ntiben", "password": ""})
+                .end(function (err, res) {
+                    expect(res.statusCode).to.equal(400);
+                    expect("Content-type", /json/)
+                    expect(res.body).eql({'error': 'No password entered'});
+                    done();
+                });
+        });
+        it('should not login and return user not found', function (done) {
+            request(app).post('/api/auth/login').send({"username": "wrong", "password": "secret"})
+                .end(function (err, res) {
+                    expect(res.statusCode).to.equal(404);
+                    expect("Content-type", /json/)
+                    expect(res.body).eql({'error': 'User not found'});
                     done();
                 });
         });
         it('should not login and return user not found', function (done) {
             request(app).post('/api/auth/login').send({"username": "", "password": "secret"})
                 .end(function (err, res) {
-                    expect(res.statusCode).to.equal(404);
+                    expect(res.statusCode).to.equal(400);
                     expect("Content-type", /json/)
-                    expect(res.body).eql({'message': 'Authentication failed. User not found.'});
+                    expect(res.body).eql({'error': 'No username entered'});
                     done();
                 });
         });
@@ -194,26 +220,24 @@ describe('Movie list API Integration Tests', function () {
                 "password": "datmagniemandweten"
             }).end(function (err, res) {
                 expect(res.statusCode).to.equal(201);
+                it('should not create a user, return user already exists', function (done) {
+                    request(app).post('/api/auth/register').send({
+                        "firstname": "Jan",
+                        "lastname": "Klaasen",
+                        "username": "jklaasen",
+                        "password": "datmagniemandweten"
+                    }).end(function (err, res) {
+                        expect(res.statusCode).to.equal(409);
+                        expect(res.body).eql({'error': 'Username already exists.'});
+                        done();
+                    });
+                });
                 done();
             });
-        });
-        it('should not create a user, return user already exists', function (done) {
-            after
-            request(app).post('/api/auth/register').send({
-                "firstname": "Jan",
-                "lastname": "Klaasen",
-                "username": "jklaasen",
-                "password": "datmagniemandweten"
-            }).end(function (err, res) {
-                expect(res.statusCode).to.equal(409);
-                expect(res.body).eql({'error': 'Username already exists.'});
-                done();
-            });
-
         });
         it('should not create a user, return an error ', function (done) {
-            after(function () {
-                request(app).post('/api/auth/register').send({
+                request(app).post('/api/auth/register')
+                    .send({
                     "firstname": "Jan",
                     "lastname": "",
                     "username": "jklaasen",
@@ -223,7 +247,6 @@ describe('Movie list API Integration Tests', function () {
                     expect(res.body).eql({'error': 'Last name is not valid. It must contain 1 characters with a maximum of 64 characters.'});
                     done();
                 });
-            });
         });
         it('should not create a user, return an error', function (done) {
             request(app).post('/api/auth/register').send({
@@ -242,7 +265,7 @@ describe('Movie list API Integration Tests', function () {
                 "firstname": "Jan",
                 "lastname": "Klaasen",
                 "username": "jklaasen",
-                "password": "hasdfoi"
+                "password": ""
             }).end(function (err, res) {
                 expect(res.statusCode).to.equal(400);
                 expect(res.body).eql({'error': 'Password not sufficient. It must contain 4 characters with a maximum of 64 characters.'});
@@ -278,7 +301,7 @@ describe('Movie list API Integration Tests', function () {
                 .set({"Authorization": "Wrong "})
                 .end(function (err, res) {
                     expect(res.statusCode).to.equal(401);
-                    expect(res.body).eql({'error':'not authorized'});
+                    expect(res.body).eql({'error': 'not authorized'});
                     done();
                 });
         });
